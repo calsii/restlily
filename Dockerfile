@@ -6,9 +6,6 @@ RUN apt-get update && apt-get install -y \
       ca-certificates \
       && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-COPY . .
-
 # openresty
 RUN wget -qO - https://openresty.org/package/pubkey.gpg | apt-key add - && \
       echo "deb http://openresty.org/package/ubuntu focal main" | tee /etc/apt/sources.list.d/openresty.list && \
@@ -23,5 +20,4 @@ RUN cd /tmp && \
       rm -rf lilypond-${LILYPOND_VERSION} && \
       apt-get remove wget -y
 
-EXPOSE 8080
 CMD openresty -p `pwd` -c config/nginx.conf -g 'daemon off;'

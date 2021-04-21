@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  resty:
+    build: ./
+    ports:
+      - 8080:8080
+    working_dir: /app
+    volumes:
+      - ./:/app
