@@ -20,4 +20,4 @@ RUN cd /tmp && \
       rm -rf lilypond-${LILYPOND_VERSION} && \
       apt-get remove wget -y
 
-CMD openresty -p `pwd` -c config/nginx.conf -g 'daemon off;'
+CMD openresty -p `pwd` -c conf/nginx.conf -g 'daemon off;'
