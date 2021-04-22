@@ -16,13 +16,6 @@ function _M.bootstrap()
         exit(ngx.HTTP_NOT_ALLOWED)
     end
 
-    -- local ok, stdout, stderr, reason, status =
-    --    shell.run([[ls .]])
-    -- if not ok then
-    --     say(stderr)
-    --     exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
-    -- end
-
     req.read_body()
     local args = req.get_post_args()
     local code
@@ -40,6 +33,13 @@ function _M.bootstrap()
 
     say(code)
 
+    local ok, stdout, stderr, reason, status =
+       shell.run([[echo '\\score{\\relative c {c4}}' | lilypond -o ly/test -]], code)
+    if not ok then
+        say(stderr)
+        exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+    end
+
     -- save request params to a temp file
     -- run lilypond
     -- read the generated pdf
@@ -52,7 +52,7 @@ function _M.bootstrap()
     -- ngx.header.content_type = "application/pdf";
     -- say(file)
     -- delete temp files
-    -- say("done")
+    say("done")
 end
 
 return _M
