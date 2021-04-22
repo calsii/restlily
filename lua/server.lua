@@ -1,11 +1,13 @@
+local ngx = require "ngx"
 local say = ngx.say
+local req_method = ngx.req.get_method
 
-local _S = {
+local _M = {
   version = "0.0.1"
 }
 
-function _S.bootstrap()
+function _M.bootstrap()
   say("server started")
 end
 
-return _S
+return _M
