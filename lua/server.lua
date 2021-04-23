@@ -33,8 +33,15 @@ function _M.bootstrap()
 
     say(code)
 
+    local temp_file = prefix .. "ly/t"
+    local file, err = utils.touch_file(temp_file, code)
+    if not file then
+        say(err)
+        exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+    end
+
     local ok, stdout, stderr, reason, status =
-        shell.run("echo " .. code .. " | lilypond - >")
+        shell.run("lilypond -o " .. temp_file .. " " .. temp_file)
     if not ok then
         say(stderr)
         exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
@@ -43,16 +50,16 @@ function _M.bootstrap()
     -- save request params to a temp file
     -- run lilypond
     -- read the generated pdf
-    local file, err = utils.read_file(prefix .. "ly/bcdefg.pdf")
+    local file, err = utils.touch_file(temp_file .. ".pdf")
     if not file then
         say(err)
         exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
     end
 
-    -- ngx.header.content_type = "application/pdf";
-    -- say(file)
+    ngx.header.content_type = "application/pdf";
+    say(file)
     -- delete temp files
-    say("done")
+    -- say("done")
 end
 
 return _M

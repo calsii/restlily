@@ -6,13 +6,18 @@ local io_open = io.open
 
 local _M = {}
 
-function _M.read_file(path)
+function _M.touch_file(path, content)
     local fp, err = io_open(path)
     if not fp then
         return nil, err
     end
 
     local chunk = fp:read("*all")
+
+    if content ~= nil then
+        fp:write(content)
+    end
+
     fp:close()
 
     return chunk
