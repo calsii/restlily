@@ -34,7 +34,7 @@ function _M.bootstrap()
     say(code)
 
     local ok, stdout, stderr, reason, status =
-       shell.run([[echo '\\score{\\relative c {c4}}' | lilypond -o ly/test -]], code)
+        shell.run("echo " .. code .. " | lilypond - >")
     if not ok then
         say(stderr)
         exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
