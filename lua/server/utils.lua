@@ -52,4 +52,14 @@ function _M.random()
     return math.floor(math.random() * 12345678.9)
 end
 
+function _M.get_by_key(obj, key)
+    for k, v in pairs(obj) do
+        if k == key then
+            return v
+        end
+    end
+
+    return nil
+end
+
 return _M
