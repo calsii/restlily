@@ -6,8 +6,21 @@ local io_open = io.open
 
 local _M = {}
 
-function _M.touch_file(path, content)
+function _M.read_file(path)
     local fp, err = io_open(path)
+    if not fp then
+        return nil, err
+    end
+
+    local chunk = fp:read("*all")
+
+    fp:close()
+
+    return chunk
+end
+
+function _M.write_file(path, content)
+    local fp, err = io_open(path, "w+b")
     if not fp then
         return nil, err
     end
@@ -29,6 +42,14 @@ function _M.gsub(subject, regex, replace, options)
     end
 
     return re.gsub(subject, regex, replace, options)
+end
+
+function _M.random()
+    ngx.update_time()
+
+    math.randomseed(math.floor(ngx.now() * 1.23456789))
+
+    return math.floor(math.random() * 12345678.9)
 end
 
 return _M
