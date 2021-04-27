@@ -12,6 +12,10 @@ RUN wget -qO - https://openresty.org/package/pubkey.gpg | apt-key add - && \
       apt-get update && \
       apt-get -y install --no-install-recommends openresty
 
+# install resty template
+RUN wget -O /usr/local/openresty/lualib/resty/template.lua \
+      https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua
+
 # lilypond
 ENV LILYPOND_VERSION 2.22.0-1
 RUN cd /tmp && \

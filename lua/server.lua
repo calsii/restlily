@@ -10,7 +10,14 @@ local prefix = ngx.config.prefix()
 local _M = { version = "0.0.1" }
 
 function _M.bootstrap()
-    if req.get_method() ~= "POST" then
+    local method = req.get_method()
+
+    if method == "GET" then
+        local template = require("resty.template")
+        template.new({ root = prefix .. "web" }).render_file("index.html")
+    end
+
+    if method ~= "POST" then
         exit(ngx.HTTP_NOT_ALLOWED)
     end
 
@@ -32,12 +39,7 @@ function _M.bootstrap()
     end
 
     -- run lilypond
-    local ok, stdout, stderr, reason, status =
-        shell.run("lilypond -o " .. temp_file .. " " .. temp_file)
-    if not ok then
-        say(stderr)
-        exit(ngx.HTTP_NOT_ACCEPTABLE)
-    end
+    shell.run("lilypond -o " .. temp_file .. " " .. temp_file)
 
     -- read the generated pdf
     local file, err = utils.read_file(temp_file .. ".pdf")
@@ -50,7 +52,6 @@ function _M.bootstrap()
     say(file)
     -- delete temp files
     shell.run("rm -f " .. temp_file .. '.*')
-    -- say("done")
     exit(ngx.HTTP_OK)
 end
 

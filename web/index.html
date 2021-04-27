@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilypool</title>
+    <style>
+        html,
+        body,
+        #editor {
+          margin: 0;
+          height: 100%;
+          font-family: "Helvetica Neue", Arial, sans-serif;
+          color: #333;
+        }
+
+        textarea,
+        #editor div {
+          display: inline-block;
+          width: 49%;
+          height: 100%;
+          vertical-align: top;
+          box-sizing: border-box;
+          padding: 0 20px;
+        }
+
+        textarea {
+            border: none;
+            border-right: 1px solid #ccc;
+            resize: none;
+            outline: none;
+            background-color: #f6f6f6;
+            font-size: 14px;
+            font-family: "Monaco", courier, monospace;
+            padding: 20px;
+        }
+
+        code {
+            color: #f66;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="editor">
+        <textarea id="code"></textarea>
+        <div><canvas id="pdf"></canvas></div>
+    </div>
+
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"
+    ></script>
+    <script>
+        window.api = 'http://localhost:8080'
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+        $(document).ready(function () {
+            const $code = $('#code')
+
+            $code.val(`
+\\version "2.22.1"
+{
+  % middle tie looks funny here:
+  <c' d'' b''>8. ~ <c' d'' b''>8
+}
+            `)
+
+            $
+                .post(api, { code: $code.val() })
+                .done(function (data) {
+                    var loadingTask = pdfjsLib.getDocument({ data });
+                    loadingTask.promise.then(function(pdf) {
+                      console.log('PDF loaded');
+
+                      // Fetch the first page
+                      var pageNumber = 1;
+                      pdf.getPage(pageNumber).then(function(page) {
+                        console.log('Page loaded');
+
+                        var scale = 1;
+                        var viewport = page.getViewport({ scale });
+
+                        // Prepare canvas using PDF page dimensions
+                        var canvas = document.getElementById('pdf');
+                        var canvasContext = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        // Render PDF page into canvas context
+                        var renderContext = {
+                          canvasContext,
+                          viewport
+                        };
+                        var renderTask = page.render(renderContext);
+                        renderTask.promise.then(function () {
+                          console.log('Page rendered');
+                        });
+                      });
+                    }, function (reason) {
+                      // PDF loading error
+                      console.error(reason);
+                    });
+                }).fail(err => {
+                    console.log(err)
+                })
+        })
+    </script>
+</body>
+</html>
