@@ -1,0 +1,15 @@
+{
+  "name": "restlily_web",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node_modules/rollup/dist/bin/rollup index.js --file app.js --format iife --watch",
+    "build": "node_modules/rollup/dist/bin/rollup index.js --file app.js --format iife --compact"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^2.45.2"
+  }
+}
