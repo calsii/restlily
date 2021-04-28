@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+RUN useradd -m -u 1000 ubuntu
+
 RUN apt-get update && apt-get install -y \
       wget \
       gnupg \
@@ -24,4 +26,5 @@ RUN cd /tmp && \
       rm -rf lilypond-${LILYPOND_VERSION} && \
       apt-get remove wget -y
 
+RUN mkdir -p /app/ly && chown ubuntu:ubuntu /app/ly
 CMD openresty -p `pwd` -c conf/nginx.conf -g 'daemon off;'

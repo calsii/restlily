@@ -20,7 +20,7 @@ function _M.read_file(path)
 end
 
 function _M.write_file(path, content)
-    local fp, err = io_open(path, "w+b")
+    local fp, err = io_open(path, "wb+")
     if not fp then
         return nil, err
     end
@@ -49,7 +49,7 @@ function _M.random()
 
     math.randomseed(math.floor(ngx.now() * 1.23456789))
 
-    return math.floor(math.random() * 12345678.9)
+    return math.floor(math.random() * 123456789.87654321)
 end
 
 function _M.get_by_key(obj, key)
