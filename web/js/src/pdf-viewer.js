@@ -1,7 +1,11 @@
+import m from 'mithril'
+import {debounce} from './lib'
+import {api} from './config'
+
 const pdfjsLib = window['pdfjs-dist/build/pdf']
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js'
 
-export const viewFromData = data => {
+export const viewFromData = (data, el) => {
     const loadingTask = pdfjsLib.getDocument({data})
     loadingTask.promise.then(function (pdf) {
         // console.log('PDF loaded')
@@ -15,7 +19,7 @@ export const viewFromData = data => {
             let viewport = page.getViewport({scale})
 
             // Prepare canvas using PDF page dimensions
-            let canvas = document.getElementById('pdf')
+            let canvas = el
             let canvasContext = canvas.getContext('2d')
             canvas.height = viewport.height
             canvas.width = viewport.width
@@ -31,5 +35,18 @@ export const viewFromData = data => {
         console.error(reason)
     })
 }
+
+export const generatePdf = (code, el = null) => {
+    return m.request({
+        method: 'GET',
+        url: `${api}/ly`,
+        params: {code},
+        responseType: 'arraybuffer'
+    }).then(data => {
+        viewFromData(data, el || document.getElementById('pdf'))
+    })
+}
+
+export const updaetPdf = debounce(generatePdf)
 
 export default pdfjsLib

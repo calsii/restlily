@@ -1,28 +1,27 @@
 import m from 'mithril'
-import {viewFromData} from './pdf-viewer'
+import {generatePdf, updaetPdf} from './pdf-viewer'
+import { demoCode } from './config'
 
-const exampleCode = `
-\\version "2.22.1"
-{
-% middle tie looks funny here:
-<c' d'' b''>8. ~ <c' d'' b''>8
-}
-`
+let code = demoCode
 
-const view = [
-    m('div', {id: 'editor'}, [
-        m('textarea', {id: 'code', textContent: exampleCode}),
-        m('div', [
-            m('canvas', {id: 'pdf'})
+const app = {
+    view () {
+        return m('div#editor', [
+            m('textarea#code', {
+                textContent: code,
+                oninput (e) {
+                    code = e.target.value
+                    updaetPdf(code)
+                }
+            }),
+            m('div', [
+                m('canvas#pdf')
+            ])
         ])
-    ])
-]
+    },
+    oncreate () {
+        generatePdf(code)
+    }
+}
 
-m.render(document.body, view)
-
-m.request({
-    method: 'GET',
-    url: 'http://localhost:8080/ly',
-    params: {code: exampleCode},
-    responseType: 'arraybuffer'
-}).then(viewFromData)
+m.render(document.body, m(app))
