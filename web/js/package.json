@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "dev": "webpack -d eval --watch",
     "build": "webpack"
   },
   "author": "",
@@ -13,6 +14,7 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "mithril": "^2.0.4"
   }
 }

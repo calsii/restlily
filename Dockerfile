@@ -19,7 +19,7 @@ RUN wget -O /usr/local/openresty/lualib/resty/template.lua \
       https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua
 
 # lilypond
-ENV LILYPOND_VERSION 2.22.0-1
+ENV LILYPOND_VERSION 2.22.1-1
 RUN cd /tmp && \
       wget https://lilypond.org/download/binaries/linux-64/lilypond-${LILYPOND_VERSION}.linux-64.sh && \
       echo -e "\n" | sh lilypond-${LILYPOND_VERSION}.linux-64.sh && \
