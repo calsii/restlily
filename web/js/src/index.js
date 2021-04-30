@@ -1,5 +1,4 @@
 import m from 'mithril'
-import axios from 'axios'
 import {viewFromData} from './pdf-viewer'
 
 const exampleCode = `
@@ -21,10 +20,9 @@ const view = [
 
 m.render(document.body, view)
 
-axios({
-    method: 'get',
-    url: `http://localhost:8080/ly?code=${encodeURIComponent(exampleCode)}`,
+m.request({
+    method: 'GET',
+    url: 'http://localhost:8080/ly',
+    params: {code: exampleCode},
     responseType: 'arraybuffer'
-}).then(res => {
-    viewFromData(res.data)
-})
+}).then(viewFromData)
